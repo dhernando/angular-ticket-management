@@ -1,0 +1,40 @@
+<mat-toolbar color="primary">
+    <span>Tickets</span>
+    <span class="spacer"></span>
+    <button mat-icon-button [routerLink]="['/tickets', 'new']">
+        <mat-icon>add</mat-icon>
+    </button>
+</mat-toolbar>
+<ng-container *ngIf="tickets; else loading">
+    <table mat-table [dataSource]="tickets" class="mat-elevation-z8">
+    
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let ticket"> {{ticket.id}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let ticket"> {{ticket.description}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let ticket" class="action-buttons">
+                <button mat-raised-button color="primary" [routerLink]="['/tickets', ticket.id ]">Edit</button>
+                <button mat-raised-button color="warn" (click)="deleteTicket(ticket.id)">Delete</button>
+            </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="9999">
+                No data
+            </td>
+        </tr>
+    </table>
+</ng-container>
+<ng-template #loading>
+    <p class="loader">Loading tickets...</p>
+</ng-template>

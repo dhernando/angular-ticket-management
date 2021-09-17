@@ -105,4 +105,16 @@ export class BackendService {
 
     return of(updatedTicket).pipe(delay(randomDelay()));
   }
+
+  delete(ticketId: number){
+    const foundTicket = this.findTicketById(ticketId);
+
+    if(!foundTicket){
+      return throwError(new Error("ticket not found"));
+    }
+
+    const index = this.storedTickets.map(ticket => ticket.id).indexOf(ticketId);
+    this.storedTickets.splice(index, 1);
+    return of(this.storedTickets).pipe(delay(randomDelay()));
+  }
 }

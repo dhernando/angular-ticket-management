@@ -1,0 +1,15 @@
+.spacer {
+    flex: 1 1 auto;
+}
+
+table {
+    width: 100%;
+}
+
+.loader {
+    padding: 30px 15px 0px;
+}
+
+.action-buttons > button:nth-child(1){
+    margin-right: 10px;
+}
