@@ -1,42 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { Subscription } from 'rxjs';
-import { BackendService, Ticket } from 'src/app/backend.service';
+import { Component } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { Ticket } from 'src/app/models/ticket';
+import { DeleteTicket } from 'src/app/store/ticket/ticket.actions';
+import { TicketState } from 'src/app/store/ticket/ticket.state';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnInit {
-
-  subscription: Subscription;
+export class ListComponent {
   displayedColumns: string[] = ['id', 'description', 'actions'];
-  tickets: MatTableDataSource<Ticket>;
+  @Select(TicketState.getTickets) tickets: Observable<Ticket[]>;
   loading: boolean;
 
-  constructor(private backendService: BackendService) { }
-
-  ngOnInit() {
-    this.loadTickets();
-  }
+  constructor(private store: Store) {}
 
   deleteTicket(id){
-    this.backendService.delete(id).subscribe((tickets) => {
-      this.tickets = new MatTableDataSource(tickets);
-    });
+    this.store.dispatch(new DeleteTicket(id));
   }
-
-  loadTickets(){
-    this.loading = true;
-    this.subscription = this.backendService.tickets().subscribe(tickets => {
-      this.tickets = new MatTableDataSource(tickets);
-      this.loading = false;
-    });
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
 }

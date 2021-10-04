@@ -1,24 +1,14 @@
 import { Injectable } from "@angular/core";
 import { Observable, of, throwError } from "rxjs";
-import { delay, tap } from "rxjs/operators";
+import { delay } from "rxjs/operators";
+import { Ticket } from "./models/ticket";
+import { User } from "./models/user";
 
 /**
  * This service acts as a mock backend.
  *
  * You are free to modify it as you see.
  */
-
-export type User = {
-  id: number;
-  name: string;
-};
-
-export type Ticket = {
-  id: number;
-  description: string;
-  assigneeId: number;
-  completed: boolean;
-};
 
 function randomDelay() {
   return Math.random() * 1000;
@@ -69,12 +59,12 @@ export class BackendService {
     return of(this.findUserById(id)).pipe(delay(randomDelay()));
   }
 
-  newTicket(payload: { description: string }) {
+  newTicket(payload: { description: string, assigneeId: number, completed: boolean }) {
     const newTicket: Ticket = {
       id: ++this.lastId,
       description: payload.description,
-      assigneeId: null,
-      completed: false
+      assigneeId: payload.assigneeId || null,
+      completed: payload.completed || false
     };
 
     this.storedTickets = this.storedTickets.concat(newTicket);
